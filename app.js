@@ -44,6 +44,14 @@ const kiwi = new Fruit({
     review: "Alright, a lot of effort for little gain.",
 });
 
+const blueberry = new Fruit({
+    name: "blueberry",
+    rating: 9,
+    review: "Superfood!",
+});
+
+blueberry.save();
+
 // -----------------------------------------------------------------------------------
 // insert many example
 // Fruit.insertMany([banana, kiwi], (err, fruits) => {
@@ -55,23 +63,31 @@ const kiwi = new Fruit({
 // });
 
 // -----------------------------------------------------------------------------------
-// Person example
+// Person example, and relationship example
 
 const peopleSchema = new mongoose.Schema({
     name: String,
     age: Number,
+    favoriteFruit: fruitSchema,
 });
 
 // mongoose will auto make it plural "fruits"
 const Person = mongoose.model("Person", peopleSchema);
 
-const person = new Person({
-    name: "John",
-    age: 37,
+// const john = new Person({
+//     name: "John",
+//     age: 37,
+// });
+
+const amy = new Person({
+    name: "Amy",
+    age: 12,
+    favoriteFruit: banana,
 });
 
 // save your new person into the database
-// person.save();
+// john.save();
+// amy.save();
 
 // -----------------------------------------------------------------------------------
 // deleteOne example. This is synchronous and uses "await" rather than a callback function
@@ -84,12 +100,12 @@ if (deletedFruit.deletedCount === 1) {
 
 // -----------------------------------------------------------------------------------
 // deleteMany. This is synchronous and uses "await" rather than a callback function
-const deletedPeople = await Person.deleteMany({ name: "John" });
-if (deletedPeople.deletedCount >= 1) {
-    console.log(deletedPeople.deletedCount + " Johns were deleted.");
-} else {
-    console.log("There was an error and Johns were not deleted.");
-}
+// const deletedPeople = await Person.deleteMany({ name: "John" });
+// if (deletedPeople.deletedCount >= 1) {
+//     console.log(deletedPeople.deletedCount + " Johns were deleted.");
+// } else {
+//     console.log("There was an error and Johns were not deleted.");
+// }
 
 // -----------------------------------------------------------------------------------
 // Find example. "fruits" is an array of objects
@@ -107,7 +123,15 @@ Fruit.find((err, fruits) => {
 
 // -----------------------------------------------------------------------------------
 // Update example. These are async and for some reason this needs to be after find function...
-Fruit.updateOne({ name: "banana" }, { rating: 8 }, (err) => {
+// Fruit.updateOne({ name: "banana" }, { rating: 8 }, (err) => {
+//     if (err) {
+//         console.log(err);
+//     } else {
+//         console.log("Successfully updated the document");
+//     }
+// });
+
+Person.updateOne({ name: "John" }, { favoriteFruit: blueberry }, (err) => {
     if (err) {
         console.log(err);
     } else {
